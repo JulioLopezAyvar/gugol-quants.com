@@ -70,20 +70,6 @@
         <meta name="dc.language" content="es_ES">
 
         <link rel="canonical" href="https://gugol-quants.com/">
-        <!--
-        <script type="application/ld+json">
-            {
-                "@context":"https://schema.org",
-                "@type":"WebSite",
-                "url" :"https:\/\/gugol-quants.com",
-                "potentialAction": {
-                    "@type":"SearchAction",
-                    "target":"https:\/\/gugol-quants.com\/?s={search_term_string}",
-                    "query-input":"required name=search_term_string"
-                }
-            }
-        </script>
-        -->
 
         <!-- Open Graph metatags -->
         <meta property="og:url" content="https://gugol-quants.com/">
@@ -190,6 +176,7 @@
                 }
             </style>
         </noscript>
+
         <noscript>
             <style>
                 .lazyload[data-src] {
@@ -197,6 +184,7 @@
                 }
             </style>
         </noscript>
+
         <style>
             .lazyload {
                 background-image: none !important;
@@ -455,8 +443,6 @@
                 font-size: var(--wp--preset--font-size--x-large) !important;
             }
         </style>
-
-        <script id="pixel-chaty" async="true" src="https://cdn.chaty.app/pixel.js?id=CVzYh9Nv"></script>
     ' . $header_gtag;
 
     $header_public_latam = '
@@ -477,20 +463,6 @@
         <meta name="dc.language" content="es_ES">
 
         <link rel="canonical" href="https://gugol-quants.com/">
-        <!--
-        <script type="application/ld+json">
-            {
-                "@context":"https://schema.org",
-                "@type":"WebSite",
-                "url" :"https:\/\/gugol-quants.com",
-                "potentialAction": {
-                    "@type":"SearchAction",
-                    "target":"https:\/\/gugol-quants.com\/?s={search_term_string}",
-                    "query-input":"required name=search_term_string"
-                }
-            }
-        </script>
-        -->
 
         <!-- Open Graph metatags -->
         <meta property="og:url" content="https://gugol-quants.com/">
@@ -597,6 +569,7 @@
                 }
             </style>
         </noscript>
+
         <noscript>
             <style>
                 .lazyload[data-src] {
@@ -604,6 +577,7 @@
                 }
             </style>
         </noscript>
+
         <style>
             .lazyload {
                 background-image: none !important;
@@ -862,17 +836,7 @@
                 font-size: var(--wp--preset--font-size--x-large) !important;
             }
         </style>
-
-        <script id="pixel-chaty" async="true" src="https://cdn.chaty.app/pixel.js?id=CVzYh9Nv"></script>
-
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":
-        new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
-        "https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,"script","dataLayer","GTM-KZTLTH3");</script>
-        <!-- End Google Tag Manager -->
-    ';
+    ' . $header_gtag;
 
     $body_public = '
         <!-- Google Tag Manager (noscript) -->
