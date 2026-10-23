@@ -9,7 +9,7 @@
 	$config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/.env", true);
     extract($config);
 
-	#if(!isset($_COOKIE['visit']) && $_COOKIE['visit'] != "true") {
+	if(!isset($_COOKIE['visit'])) {
 		/*
 			1 hour		time() + 3600
 			12 hours	time() + 43200
@@ -17,8 +17,8 @@
 			15 days		time() + 1296000
 			30 days		time() + 2592000
 		*/
-		#setcookie("visit", "true", time() + 2592000, "/", "", 1);
-	#}
+		setcookie("visit", "true", time() + 2592000, "/", "", 1);
+	}
 
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: Accept, Authorization, Accept-Language, Content-Type, Origin, User-Agent");
@@ -35,7 +35,7 @@
     header("X-Permitted-Cross-Domain-Policies: none");
     header("X-XSS-Protection: 1; mode=block");
 
-	require $_SERVER['DOCUMENT_ROOT'] . "/assets/script/globals.php";
+	require $_SERVER['DOCUMENT_ROOT'] . "/assets/php/globals.php";
 ?>
 
 <!DOCTYPE html>
@@ -1352,7 +1352,7 @@
 					$('.en').show();
 
 					$.post(
-						"../assets/script/lang.php",
+						"/backend/lang.php",
 						{"lang": "en"}
 					);
 				});
@@ -1362,7 +1362,7 @@
 					$('.en').hide();
 
 					$.post(
-						"../assets/script/lang.php",
+						"/backend/lang.php",
 						{"lang": "es"}
 					);
 				});
