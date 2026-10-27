@@ -1,21 +1,16 @@
 <?php
-    /*
-    README
-        algunas variables se igualan a 0 para que al enviarse al endpoint de actualizacion, se guarden como null
-    */
-
     date_default_timezone_set('America/Lima');
     $time_start = microtime(true);
 
-    $config = parse_ini_file("/var/www/resources/env-gq.sh", true);
+    $config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/.env", true);
     extract($config);
 
     #header("Access-Control-Allow-Origin: " . $ACCESS_CONTROL_ALLOW_ORIGIN . "");
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: Accept, Accept-Language, Authorization, Content-Type, Origin, User-Agent");
-    header("Access-Control-Allow-Methods: OPTIONS, POST, PUT, DELETE");
+    header("Access-Control-Allow-Methods: OPTIONS, POST, GET");
     header("Access-Control-Max-Age: 1000");
-    header("Allow: OPTIONS, POST, PUT, DELETE");
+    header("Allow: OPTIONS, POST, GET");
     header("Cache-Control: no-cache");
     #header("Content-Type: application/json; charset=utf-8");
     header("Pragma: no-cache");
@@ -51,19 +46,17 @@
         $lang = $LANGUAGE_DEFAULT;
     }
 
-    #echo file_get_contents('php://input');
-    $method = strval(date("Y-m-d\TH:i:s\Z") . "|method: " . $_SERVER['REQUEST_METHOD'] . "\n");
+    #$method = strval(date("Y-m-d\TH:i:s\Z") . "|method: " . $_SERVER['REQUEST_METHOD'] . "\n");
 
-    $fp = file_put_contents( __DIR__ . '/request.log', $method, FILE_APPEND);
-
-    $fp = file_put_contents( __DIR__ . '/request.log', date("Y-m-d\TH:i:s\Z") . "|body: ", FILE_APPEND);
+    #$fp = file_put_contents( __DIR__ . '/request.log', $method, FILE_APPEND);
+    #$fp = file_put_contents( __DIR__ . '/request.log', date("Y-m-d\TH:i:s\Z") . "|body: ", FILE_APPEND);
 
     if (strtoupper($_SERVER["REQUEST_METHOD"]) == "POST") {
         // capture second response which should be JSON payload
-        $entityBody = file_get_contents('php://input');
-        $fp = file_put_contents( __DIR__ . '/request.log', $entityBody, FILE_APPEND);
+        $jsonData = file_get_contents('php://input');
+        #$fp = file_put_contents( __DIR__ . '/request.log', $jsonData, FILE_APPEND);
 
-        $messages = json_decode(utf8_encode($entityBody));
+        $message = json_decode($jsonData);
 
         if (json_last_error()) {
             switch (json_last_error()) {
@@ -97,18 +90,13 @@
             }
         }
         else {
-            #$fp = file_put_contents( __DIR__ . '/request.log', date("Y-m-d\TH:i:s\Z") . "|response: ", FILE_APPEND);
-
-            #$fp = file_put_contents( __DIR__ . '/request.log', $messages, FILE_APPEND);
-
-            #$fp = file_put_contents( __DIR__ . '/request.log', "\n\n\n", FILE_APPEND);
-
-            require "/var/www/resources/php/vendor/autoload.php";
+            require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
             $global_db_environment = $MASTER_ENVIRONMENT;
             $global_db_type = "mongo";
             $global_db_credential = "app_user_gq";
-            require '/var/www/resources/php/gugol-quants-io/appConnection.php';
+
+            require_once $_SERVER['DOCUMENT_ROOT'] . '/assets/php/appConnection.php';
 
             $tv = $mongo->gugol_quants->tv;
 
@@ -124,78 +112,64 @@
                 }
             */
 
-            foreach ($messages as $message) {
-                $password = strval($message->password);
-                $order_type = strval(strtoupper($message->order_type));
-                $time = strval($message->time);
-                $period = strval($message->period);
-                $broker = strval(strtoupper($message->broker));
-                $symbol = strval(strtoupper($message->symbol));
+            $password = strval($message->password);
+            $order_type = strval(strtoupper($message->order_type));
+            $time = strval($message->time);
+            $period = strval($message->period);
+            $broker = strval(strtoupper($message->broker));
+            $symbol = strval(strtoupper($message->symbol));
 
-                $array_mongo = array(
-                    "password" => strval($password),
-                    "order_type" => strval($order_type),
-                    "time" => strval($time),
-                    "period" => strval($period),
-                    "broker" => strval($broker),
-                    "symbol" => strval($symbol),
+            $array_mongo = array(
+                "password" => strval($password),
+                "order_type" => strval($order_type),
+                "time" => strval($time),
+                "period" => strval($period),
+                "broker" => strval($broker),
+                "symbol" => strval($symbol),
 
-                    "created_at" => new MongoDB\BSON\UTCDateTime(),
+                "created_at" => new MongoDB\BSON\UTCDateTime(),
 
-                    "updated_at" => new MongoDB\BSON\UTCDateTime(),
-                );
+                "updated_at" => new MongoDB\BSON\UTCDateTime(),
+            );
 
-                $create_tv = $tv->insertOne($array_mongo);
+            $create_tv = $tv->insertOne($array_mongo);
 
-                echo $message->password . "|" . $message->order_type . "|" . $message->period . "|" . $message->broker . "|" . $message->symbol;
+            echo $message->password . "|" . $message->order_type . "|" . $message->period . "|" . $message->broker . "|" . $message->symbol;
 
-                /*
-                    /newbot
+            /*
+                /newbot
 
-                    Alright, a new bot. How are we going to call it? Please choose a name for your bot.
-                    gugol_test
+                Alright, a new bot. How are we going to call it? Please choose a name for your bot.
+                gugol_test
 
-                    Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.
-                    gugol_bot
+                Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.
+                gugol_bot
 
-                    Sorry, this username is already taken. Please try something different.
-                    gugol_quants_bot
+                Sorry, this username is already taken. Please try something different.
+                gugol_quants_bot
 
-                    Done! Congratulations on your new bot. You will find it at t.me/gugol_quants_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+                Done! Congratulations on your new bot. You will find it at t.me/gugol_quants_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
 
-                    Use this token to access the HTTP API:
-                    6173905123:AAHjJiDbBNuBHHFbVzhX0LBLohPgjOLEzz0
-                    Keep your token secure and store it safely, it can be used by anyone to control your bot.
+                Use this token to access the HTTP API:
+                6173905123:AAHjJiDbBNuBHHFbVzhX0LBLohPgjOLEzz0
+                Keep your token secure and store it safely, it can be used by anyone to control your bot.
 
-                    For a description of the Bot API, see this page: https://core.telegram.org/bots/api
-                */
+                For a description of the Bot API, see this page: https://core.telegram.org/bots/api
+            */
 
-                /*
-                $apiToken = "6173905123:AAHjJiDbBNuBHHFbVzhX0LBLohPgjOLEzz0";
+            /*
+            $apiToken = "6173905123:AAHjJiDbBNuBHHFbVzhX0LBLohPgjOLEzz0";
 
-                $data = [
-                    'chat_id' => '5048479001',
-                    'text' => 'mensaje desde api webhook'
-                ];
+            $data = [
+                'chat_id' => '5048479001',
+                'text' => 'mensaje desde api webhook'
+            ];
 
-                $response = file_get_contents("https://api.telegram.org/bot/$apiToken/sendMessage?" . http_build_query($data));
-                */
-            }
+            $response = file_get_contents("https://api.telegram.org/bot/$apiToken/sendMessage?" . http_build_query($data));
+            */
         }
     }
     else if (strtoupper($_SERVER["REQUEST_METHOD"]) == "GET") {
-        // capture second response which should be JSON payload
-        $entityBody = file_get_contents('php://input');
-        $fp = file_put_contents( __DIR__ . '/request.log', $entityBody, FILE_APPEND);
-
-        $messages = json_decode(utf8_encode($entityBody));
-
-        $fp = file_put_contents( __DIR__ . '/request.log', date("Y-m-d\TH:i:s\Z") . "|response: ", FILE_APPEND);
-
-        $fp = file_put_contents( __DIR__ . '/request.log', $messages, FILE_APPEND);
-
-        $fp = file_put_contents( __DIR__ . '/request.log', "\n\n\n", FILE_APPEND);
-
         if (!isset($_GET["password"])) {
             unset($symbol);
         }
@@ -203,37 +177,36 @@
             $password = strval($_GET["password"]);
         }
 
-        require "/var/www/resources/php/vendor/autoload.php";
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
         $global_db_environment = $MASTER_ENVIRONMENT;
         $global_db_type = "mongo";
         $global_db_credential = "app_user_gq";
-        require '/var/www/resources/php/gugol-quants-io/appConnection.php';
+
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/assets/php/appConnection.php';
 
         $tv = $mongo->gugol_quants->tv;
 
         if (isset($password)) {
             $select_data = $tv->find(
-                array(
-                    'password' => strval($password),
-                ),
-                array(
-                    'sort' => array(
+                ['password' => strval($password)],
+                [
+                    'sort' => [
                         'created_at' => -1,
-                    ),
+                    ],
                     'limit' => 1,
-                )
+                ],
             );
         }
         else {
             $select_data = $tv->find(
-                array(),
-                array(
-                    'sort' => array(
+                [],
+                [
+                    'sort' => [
                         'created_at' => -1,
-                    ),
+                    ],
                     'limit' => 1,
-                )
+                ],
             );
         }
 
@@ -242,22 +215,20 @@
         }
     }
     else {
-        header("HTTP/1.1 405 Method Not Allowed");
-
-        $error_message = ($lang == "en" ? "Invalid method" : "Método inválido");
-
-        $error = array (
-            "data" => array (
-                "errors" => array (array (
+        $error = [
+            "data" => [
+                "errors" => [[
                     "key" => "invalid",
-                    "message" => $error_message,
-                    "payload" => array (
+                    "message" => ($lang == "en" ? "Invalid method" : "Método inválido"),
+                    "payload" => [
                         "code" => null,
-                    ),
+                    ],
                     "type" => "method",
-                ))
-            )
-        );
+                ]],
+            ],
+        ];
+
+        header("HTTP/1.1 405 Method Not Allowed");
 
         echo json_encode($errors);
         exit();
