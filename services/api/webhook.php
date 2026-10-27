@@ -95,7 +95,6 @@
             $global_db_environment = $MASTER_ENVIRONMENT;
             $global_db_type = "mongo";
             $global_db_credential = "app_user_gq";
-
             require_once $_SERVER['DOCUMENT_ROOT'] . '/assets/php/appConnection.php';
 
             $tv = $mongo->gugol_quants->tv;
@@ -182,7 +181,6 @@
         $global_db_environment = $MASTER_ENVIRONMENT;
         $global_db_type = "mongo";
         $global_db_credential = "app_user_gq";
-
         require_once $_SERVER['DOCUMENT_ROOT'] . '/assets/php/appConnection.php';
 
         $tv = $mongo->gugol_quants->tv;
