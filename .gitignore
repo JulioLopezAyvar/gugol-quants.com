@@ -1,1 +1,5 @@
+DEPRECED*
+ONHOLD*
 .env
+vendor
+assets/php/appConnection.php

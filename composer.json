@@ -1,0 +1,9 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^7.1",
+        "mongodb/mongodb": "^2.5",
+        "predis/predis": "^3.7",
+        "dandjo/simple-obfuscator": "^1.0",
+        "firebase/php-jwt": "^7.2"
+    }
+}
