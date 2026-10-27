@@ -35,7 +35,7 @@
     header("X-Permitted-Cross-Domain-Policies: none");
     header("X-XSS-Protection: 1; mode=block");
 
-	require $_SERVER['DOCUMENT_ROOT'] . "/assets/php/globals.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/assets/php/globals.php";
 ?>
 
 <!DOCTYPE html>

@@ -20,7 +20,7 @@
     header("X-Permitted-Cross-Domain-Policies: none");
     header("X-XSS-Protection: 1; mode=block");
 
-	require "/var/www/resources/php/gugol-quants-io/global_variable.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/assets/script/globals.php";
 ?>
 
 <!DOCTYPE html>

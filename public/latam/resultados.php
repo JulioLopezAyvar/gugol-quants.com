@@ -20,7 +20,7 @@
     header("X-Permitted-Cross-Domain-Policies: none");
     header("X-XSS-Protection: 1; mode=block");
 
-	require $_SERVER['DOCUMENT_ROOT'] . "/assets/script/globals.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/assets/script/globals.php";
 
 	$array_videos = array(
 		array("December - Week 1", "Diciembre - Semana 1", "https://youtube.com/embed/CW5NTI1NcrM"),
